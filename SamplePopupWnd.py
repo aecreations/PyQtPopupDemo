@@ -1,8 +1,8 @@
 import sys
 
-from PyQt6.QtCore import Qt, QPoint, QSize
-from PyQt6.QtGui import QIcon, QAction, QGuiApplication
-from PyQt6.QtWidgets import (QWidget, QMenu, QSystemTrayIcon, QHBoxLayout, QPushButton,
+from PySide6.QtCore import Qt, QPoint, QSize
+from PySide6.QtGui import QIcon, QAction, QGuiApplication
+from PySide6.QtWidgets import (QWidget, QMenu, QSystemTrayIcon, QHBoxLayout, QPushButton,
     QMessageBox, QMainWindow)
 
 class SamplePopupWnd(QMainWindow):
@@ -42,13 +42,14 @@ class SamplePopupWnd(QMainWindow):
         hbox.addStretch(2)
         hbox.addWidget(self.menubutton)
 
+        # Add to a QWidget that is styled with rounded corners.
         self.popup = QWidget(self)
         self.popup.setObjectName("popup")
         self.popup.resize(QSize(self.popupwidth, self.popupheight))
         self.popup.setLayout(hbox)
 
         self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground, True)
-        self.setWindowFlags(Qt.WindowType.Popup | Qt.WindowType.WindowStaysOnTopHint)
+        self.setWindowFlags(Qt.WindowType.Popup)
         self.setGeometry(200, 100, self.popupwidth, self.popupheight)
         self.setStyleSheet("""
             #popup {
