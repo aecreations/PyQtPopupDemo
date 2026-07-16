@@ -72,7 +72,7 @@ class SamplePopupWnd(QMainWindow):
         sys.exit()
 
     def getSystemTrayIcon(self):
-        icon = QIcon("systray.svg")
+        icon = QIcon("systray.png")
         return icon
 
     def togglePopup(self, reason):
