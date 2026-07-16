@@ -50,24 +50,10 @@ echo
 cd "dist/${appBundleName}.app/Contents/Frameworks"
 echo -n "Code signing: "
 pwd
-codesign -s "${devIDApp}" --force $tsOpt *.so
 codesign -s "${devIDApp}" --force $tsOpt *.dylib
-cd AppKit
-codesign -s "${devIDApp}" --force $tsOpt *.so
-cd ../CoreFoundation
-codesign -s "${devIDApp}" --force $tsOpt *.so
-cd ../CoreServices
-codesign -s "${devIDApp}" --force $tsOpt *.so
-cd ../Foundation
-codesign -s "${devIDApp}" --force $tsOpt *.so
-cd ../FSEvents
-codesign -s "${devIDApp}" --force $tsOpt *.so
-cd ../objc
-codesign -s "${devIDApp}" --force $tsOpt *.so
-cd ..
-cd ../.. # dist/${appBundleName}.app/Contents/Frameworks
 cd PySide6
 codesign -s "${devIDApp}" --force $tsOpt *.so
+codesign -s "${devIDApp}" --force $tsOpt *.dylib
 cd Qt/lib
 codesign -s "${devIDApp}" --force $tsOpt *.framework
 cd ../plugins/generic
@@ -80,17 +66,20 @@ cd ../platforms
 codesign -s "${devIDApp}" --force $tsOpt *.dylib
 cd ../styles
 codesign -s "${devIDApp}" --force $tsOpt *.dylib
+cd ../networkinformation
+codesign -s "${devIDApp}" --force $tsOpt *.dylib
+cd ../platforminputcontexts
+codesign -s "${devIDApp}" --force $tsOpt *.dylib
+cd ../tls
+codesign -s "${devIDApp}" --force $tsOpt *.dylib
 cd ../../../../  # dist/${appBundleName}.app/Contents/Frameworks
 codesign -s "${devIDApp}" --force $tsOpt Python.framework
 cd python3.14/lib-dynload
 codesign -s "${devIDApp}" --force $tsOpt *.so
 cd ../../  # dist/${appBundleName}.app/Contents/Frameworks
-cd ../ScriptingBridge
+cd ./shiboken6
 codesign -s "${devIDApp}" --force $tsOpt *.so
-cd ../tibs
-codesign -s "${devIDApp}" --force $tsOpt *.so
-cd ../xattr
-codesign -s "${devIDApp}" --force $tsOpt *.so
+codesign -s "${devIDApp}" --force $tsOpt *.dylib
 cd ../../../../  # dist
 pwd
 echo
@@ -98,22 +87,7 @@ echo
 cd $appFldrName/_internal
 echo -n "Now code signing: "
 pwd
-codesign -s "${devIDApp}" --force $tsOpt *.so
 codesign -s "${devIDApp}" --force $tsOpt *.dylib
-cd AppKit
-codesign -s "${devIDApp}" --force $tsOpt *.so
-cd ../CoreFoundation
-codesign -s "${devIDApp}" --force $tsOpt *.so
-cd ../CoreServices
-codesign -s "${devIDApp}" --force $tsOpt *.so
-cd ../Foundation
-codesign -s "${devIDApp}" --force $tsOpt *.so
-cd ../FSEvents
-codesign -s "${devIDApp}" --force $tsOpt *.so
-cd ../objc
-codesign -s "${devIDApp}" --force $tsOpt *.so
-cd ..
-cd ../.. # dist/${appBundleName}.app/Contents/Frameworks
 cd PySide6
 codesign -s "${devIDApp}" --force $tsOpt *.so
 cd Qt/lib
@@ -128,17 +102,20 @@ cd ../platforms
 codesign -s "${devIDApp}" --force $tsOpt *.dylib
 cd ../styles
 codesign -s "${devIDApp}" --force $tsOpt *.dylib
+cd ../networkinformation
+codesign -s "${devIDApp}" --force $tsOpt *.dylib
+cd ../platforminputcontexts
+codesign -s "${devIDApp}" --force $tsOpt *.dylib
+cd ../tls
+codesign -s "${devIDApp}" --force $tsOpt *.dylib
 cd ../../../../  # dist/${appBundleName}.app/Contents/Frameworks
 codesign -s "${devIDApp}" --force $tsOpt Python.framework
 cd python3.14/lib-dynload
 codesign -s "${devIDApp}" --force $tsOpt *.so
 cd ../../  # dist/${appBundleName}.app/Contents/Frameworks
-cd ../ScriptingBridge
+cd ./shiboken6
 codesign -s "${devIDApp}" --force $tsOpt *.so
-cd ../tibs
-codesign -s "${devIDApp}" --force $tsOpt *.so
-cd ../xattr
-codesign -s "${devIDApp}" --force $tsOpt *.so
+codesign -s "${devIDApp}" --force $tsOpt *.dylib
 cd ../../../  # dist
 pwd
 cd $appFldrName
@@ -147,13 +124,7 @@ echo -n "Code signing executable located at: "
 pwd
 codesign -s "${devIDApp}" --force $tsOpt -o runtime --entitlements $entFilePath $exeName
 
-cd "../${appBundleName}.app/Contents/Helpers"
-echo
-echo -n "Code signing app updater helper app located at: "
-pwd
-codesign -s "${devIDApp}" --force $tsOpt -o runtime $helperAppBundleName.app
-
-cd ../../..  # dist
+cd ../  # dist
 echo
 echo -n "Code signing main app bundle located at: "
 pwd
