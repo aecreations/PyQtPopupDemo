@@ -1,9 +1,12 @@
 import sys
+import os
 
 from PySide6.QtCore import Qt, QPoint, QSize
 from PySide6.QtGui import QIcon, QAction, QGuiApplication
 from PySide6.QtWidgets import (QWidget, QMenu, QSystemTrayIcon, QHBoxLayout, QPushButton,
     QMessageBox, QMainWindow)
+
+basedir = os.path.dirname(__file__)
 
 class SamplePopupWnd(QMainWindow):
     def __init__(self):
@@ -72,7 +75,7 @@ class SamplePopupWnd(QMainWindow):
         sys.exit()
 
     def getSystemTrayIcon(self):
-        icon = QIcon("systray.png")
+        icon = QIcon(os.path.join(basedir, "systray.png"))
         return icon
 
     def togglePopup(self, reason):
