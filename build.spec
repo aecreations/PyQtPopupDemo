@@ -5,7 +5,7 @@ a = Analysis(
     ['demo.py'],
     pathex=[],
     binaries=[],
-    datas=[],
+    datas=[('systray.png', '.')],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},
