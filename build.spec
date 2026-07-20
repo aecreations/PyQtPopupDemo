@@ -47,4 +47,9 @@ app = BUNDLE(
     name='PyQtPopupDemo.app',
     icon=None,
     bundle_identifier='com.firstlettersoftware.PyQtPopupDemo',
+    version="1.0"
+    info_plist={
+        'LSUIElement': True,
+        'LSMinimumSystemVersion': "13.0",
+    }
 )
