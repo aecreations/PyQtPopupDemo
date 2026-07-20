@@ -4,15 +4,18 @@ import os
 from PySide6.QtCore import Qt, QPoint, QSize
 from PySide6.QtGui import QIcon, QAction, QGuiApplication
 from PySide6.QtWidgets import (QWidget, QMenu, QSystemTrayIcon, QHBoxLayout, QPushButton,
-    QMessageBox, QMainWindow)
+    QMessageBox)
+
+from SampleMainWnd import SampleMainWnd
 
 basedir = os.path.dirname(__file__)
 
-class SamplePopupWnd(QMainWindow):
+class SamplePopupWnd(QWidget):
     def __init__(self):
         super().__init__()
         self.popupwidth = 300
         self.popupheight = 400
+        self.dummywnd = None
 
         # Menu bar extra icon.
         icon = self.getSystemTrayIcon()
@@ -83,7 +86,17 @@ class SamplePopupWnd(QMainWindow):
         if reason == QSystemTrayIcon.ActivationReason.Trigger:
             if self.isVisible():
                 self.close()
+                self.dummywnd.close()
             else:
+                # Open a dummy window that will be closed once the popup is
+                # opened. This ensures that this app is brought forward and
+                # the popup is properly focused to handle events.
+                if self.dummywnd is None:
+                    self.dummywnd = SampleMainWnd()
+                self.dummywnd.show()
+                self.dummywnd.activateWindow()
+                self.dummywnd.raise_()
+
                 self.openPopup()
 
     def openPopup(self):
@@ -102,4 +115,7 @@ class SamplePopupWnd(QMainWindow):
         self.setGeometry(left, top, self.popupwidth, self.popupheight)
         self.show()
         self.activateWindow()
+
+        if self.dummywnd is not None and self.dummywnd.isVisible():
+            self.dummywnd.close()
 
