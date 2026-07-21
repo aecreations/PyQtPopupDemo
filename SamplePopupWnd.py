@@ -2,7 +2,7 @@ import sys
 import os
 
 from PySide6.QtCore import Qt, QPoint, QSize
-from PySide6.QtGui import QIcon, QAction, QGuiApplication
+from PySide6.QtGui import QIcon, QAction, QGuiApplication, QCursor
 from PySide6.QtWidgets import (QWidget, QMenu, QSystemTrayIcon, QHBoxLayout, QPushButton,
     QMessageBox)
 
@@ -16,6 +16,7 @@ class SamplePopupWnd(QWidget):
         self.popupwidth = 300
         self.popupheight = 400
         self.dummywnd = None
+        self.isOpen = False
 
         # Menu bar extra icon.
         icon = self.getSystemTrayIcon()
@@ -84,19 +85,25 @@ class SamplePopupWnd(QWidget):
     def togglePopup(self, reason):
         # Handle click on system tray icon.
         if reason == QSystemTrayIcon.ActivationReason.Trigger:
-            if self.isVisible():
-                self.close()
-                self.dummywnd.close()
-            else:
-                # Open a dummy window that will be closed once the popup is
-                # opened. This ensures that this app is brought forward and
-                # the popup is properly focused to handle events.
-                if self.dummywnd is None:
-                    self.dummywnd = SampleMainWnd()
-                self.dummywnd.show()
-                self.dummywnd.activateWindow()
-                self.dummywnd.raise_()
+            # Open a dummy window, and keep it open to ensure that this app is
+            # brought forward and the popup is properly focused to handle
+            # events.
+            if self.dummywnd is None:
+                self.dummywnd = SampleMainWnd()
 
+            if not self.dummywnd.isVisible():
+                self.dummywnd.show()
+            self.dummywnd.activateWindow()
+            self.dummywnd.raise_()
+
+            currpos = QCursor.pos()
+            systray_geom = self.systray.geometry()
+            if self.isOpen and systray_geom.contains(currpos):
+                # Close the popup window if it's open and the user clicked the
+                # menu bar extra icon.
+                self.close()
+                self.isOpen = False
+            else:
                 self.openPopup()
 
     def openPopup(self):
@@ -115,7 +122,16 @@ class SamplePopupWnd(QWidget):
         self.setGeometry(left, top, self.popupwidth, self.popupheight)
         self.show()
         self.activateWindow()
+        self.isOpen = True
 
-        if self.dummywnd is not None and self.dummywnd.isVisible():
-            self.dummywnd.close()
+    def hideEvent(self, event):
+        currpos = QCursor.pos()
+        systray_geom = self.systray.geometry()
 
+        # The `isOpen` flag should not be unset if clicking the menu bar extra
+        # icon again; otherwise user won't be able to toggle the popup open or
+        # closed by clicking it repeatedly.
+        if self.isOpen and not systray_geom.contains(currpos):
+            self.isOpen = False
+
+        event.accept()
