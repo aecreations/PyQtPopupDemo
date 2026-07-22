@@ -95,9 +95,7 @@ class SamplePopupWnd(QWidget):
             # Open a dummy window to ensure that this app is brought forward
             # and the popup is properly focused to handle events.
             self.dummywnd = SampleMainWnd()
-
-            if not self.dummywnd.isVisible():
-                self.dummywnd.show()
+            self.dummywnd.show()
             self.dummywnd.activateWindow()
             self.dummywnd.raise_()
 
