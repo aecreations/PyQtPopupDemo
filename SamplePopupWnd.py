@@ -85,11 +85,16 @@ class SamplePopupWnd(QWidget):
     def togglePopup(self, reason):
         # Handle click on system tray icon.
         if reason == QSystemTrayIcon.ActivationReason.Trigger:
-            # Open a dummy window, and keep it open to ensure that this app is
-            # brought forward and the popup is properly focused to handle
-            # events.
-            if self.dummywnd is None:
-                self.dummywnd = SampleMainWnd()
+            # Close the dummy window if still open.
+            # This is to ensure that the popup window appears in the correct
+            # screen or virtual desktop.
+            if self.dummywnd is not None:
+                self.dummywnd.close()
+                self.dummywnd = None
+
+            # Open a dummy window to ensure that this app is brought forward
+            # and the popup is properly focused to handle events.
+            self.dummywnd = SampleMainWnd()
 
             if not self.dummywnd.isVisible():
                 self.dummywnd.show()
@@ -103,6 +108,8 @@ class SamplePopupWnd(QWidget):
                 # menu bar extra icon.
                 self.close()
                 self.isOpen = False
+                self.dummywnd.close()
+                self.dummywnd = None
             else:
                 self.openPopup()
 
@@ -125,6 +132,9 @@ class SamplePopupWnd(QWidget):
         self.isOpen = True
 
     def hideEvent(self, event):
+        # N.B.: Do not close the dummy window from here. Otherwise, a crash
+        # will occur if closing the popup window by clicking outside the macOS
+        # menu bar or menu bar extra icon.
         currpos = QCursor.pos()
         systray_geom = self.systray.geometry()
 
@@ -133,5 +143,3 @@ class SamplePopupWnd(QWidget):
         # closed by clicking it repeatedly.
         if self.isOpen and not systray_geom.contains(currpos):
             self.isOpen = False
-
-        event.accept()
